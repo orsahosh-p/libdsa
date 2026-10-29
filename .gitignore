@@ -1,7 +1,22 @@
-build/
-cmake-build-*/
+# CMake build directories
+/build/
+/build-*/
+/cmake-build-*/
+
+# Compiled files
 *.o
 *.a
 *.dylib
 *.so
+
+# macOS
 .DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Temporary files
+*.swp
+*.swo
+*~
