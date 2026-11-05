@@ -9,6 +9,7 @@ set(CMAKE_C_EXTENSIONS OFF)
 # Library
 add_library(dsa STATIC
     src/vector.c
+    src/linkedlist.c
 )
 
 target_include_directories(dsa PUBLIC
@@ -28,5 +29,23 @@ if(BUILD_TESTING)
     add_test(
         NAME vector_tests
         COMMAND test_vector
+    )
+
+    add_executable(test_linkedlist
+        tests/test_linkedlist.c
+    )
+
+    target_link_libraries(test_linkedlist PRIVATE dsa)
+
+    add_test(
+        NAME linkedlist_tests
+        COMMAND test_linkedlist
+    )
+
+    add_custom_target(check
+        COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure -C $<CONFIG>
+        DEPENDS test_vector test_linkedlist
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+        USES_TERMINAL
     )
 endif()
