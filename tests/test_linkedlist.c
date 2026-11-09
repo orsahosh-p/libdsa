@@ -214,6 +214,31 @@ static void test_remove(void)
     linkedlist_destroy(list);
 }
 
+static void test_append_after_tail_removal(void)
+{
+    int input[] = {10, 20, 30};
+    LinkedList *list = make_list(input, 3);
+    assert(linkedlist_remove(list, 2) == STATUS_OK);
+    int value = 40;
+    assert(linkedlist_add(list, &value) == STATUS_OK);
+    int expected[] = {10, 20, 40};
+    assert_values(list, expected, 3);
+
+    assert(linkedlist_remove(list, 0) == STATUS_OK);
+    value = 50;
+    assert(linkedlist_add(list, &value) == STATUS_OK);
+    int after_head_removal[] = {20, 40, 50};
+    assert_values(list, after_head_removal, 3);
+
+    assert(linkedlist_clear(list) == STATUS_OK);
+    assert(linkedlist_add(list, &value) == STATUS_OK);
+    value = 60;
+    assert(linkedlist_add(list, &value) == STATUS_OK);
+    int after_clear[] = {50, 60};
+    assert_values(list, after_clear, 2);
+    linkedlist_destroy(list);
+}
+
 static void test_struct_copy(void)
 {
     typedef struct {
@@ -250,6 +275,7 @@ int main(void)
     test_add_order_and_copy();
     test_get_set_and_bounds();
     test_remove();
+    test_append_after_tail_removal();
     test_struct_copy();
 
     puts("All LinkedList tests passed!");

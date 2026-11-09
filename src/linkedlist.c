@@ -10,6 +10,7 @@ typedef struct Node {
 
 struct LinkedList {
     Node *head;
+    Node *tail;
     size_t element_size;
     size_t size;
 };
@@ -34,6 +35,7 @@ Status linkedlist_create(size_t element_size, LinkedList **out)
 
     list->element_size = element_size;
     list->head = NULL;
+    list->tail = NULL;
     list->size = 0;
 
     *out = list;
@@ -64,6 +66,7 @@ Status linkedlist_clear(LinkedList *list)
         free(temp);
     }
 
+    list->tail = NULL;
     list->size = 0;
 
     return STATUS_OK;
@@ -111,15 +114,10 @@ Status linkedlist_add(LinkedList *list, const void *element){
     if(list->head == NULL){
         list->head = elem;
     }else{
-        Node* temp = list->head;
-
-        while(temp->next != NULL){
-            temp = temp->next;
-        }
-
-        temp->next = elem;
+        list->tail->next = elem;
     }
 
+    list->tail = elem;
     list->size += 1;
 
     return STATUS_OK;
@@ -139,6 +137,9 @@ Status linkedlist_remove(LinkedList *list, size_t index){
     if(index == 0){
         removed = list->head;
         list->head = removed->next;
+        if(list->head == NULL){
+            list->tail = NULL;
+        }
     }else{
         Node* previous = list->head;
 
@@ -148,6 +149,9 @@ Status linkedlist_remove(LinkedList *list, size_t index){
 
         removed = previous->next;
         previous->next = removed->next;
+        if(removed == list->tail){
+            list->tail = previous;
+        }
     }
 
     free(removed->data);

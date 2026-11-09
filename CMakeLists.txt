@@ -11,6 +11,7 @@ add_library(dsa STATIC
     src/vector.c
     src/linkedlist.c
     src/stack.c
+    src/queue.c
 )
 
 target_include_directories(dsa PUBLIC
@@ -47,9 +48,13 @@ if(BUILD_TESTING)
     target_link_libraries(test_stack PRIVATE dsa)
     add_test(NAME stack_tests COMMAND test_stack)
 
+    add_executable(test_queue tests/test_queue.c)
+    target_link_libraries(test_queue PRIVATE dsa)
+    add_test(NAME queue_tests COMMAND test_queue)
+
     add_custom_target(check
         COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure -C $<CONFIG>
-        DEPENDS test_vector test_linkedlist test_stack
+        DEPENDS test_vector test_linkedlist test_stack test_queue
         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
         USES_TERMINAL
     )
